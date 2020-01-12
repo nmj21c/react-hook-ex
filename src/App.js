@@ -20,6 +20,7 @@ const useFetch = url => {
   const callUrl = async () => {
     try {
       const res = await axios.get(url);
+      // throw Error();
       setPayload(res);
     } catch {
       setError("ㅜ.ㅜ");
@@ -28,17 +29,26 @@ const useFetch = url => {
     }
   };
 
+  useEffect(() => {
+    callUrl();
+  }, []);
+
   return { payload, loading, error };
 };
 
 const App = () => {
   const name = useInput();
-  console.log(name);
+  const { payload, loading, error } = useFetch(
+    "https://jsonplaceholder.typicode.com/todos/1"
+  );
   return (
     <div className="App">
       <h1>Use Hooks</h1>
       <br />
-      <input {...name} placeholder="Whats your name" />
+      <input type="text" {...name} placeholder="Whats your name" />
+      {loading && <span>loading</span>}
+      {!loading && error && <span>{error}</span>}
+      {!loading && payload && console.log(payload)}
     </div>
   );
 };
